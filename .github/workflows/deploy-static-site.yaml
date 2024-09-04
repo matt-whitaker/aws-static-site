@@ -1,0 +1,48 @@
+name: Build, Test, and Deploy (Prod)
+run-name: "Build, Test, and Deploy (Prod)"
+
+on:
+  workflow_call:
+    secrets:
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
+      aws_role_to_assume:
+        required: true
+      aws_s3_bucket:
+        required: true
+      aws_cloudfront_distribution_id:
+        required: true
+    inputs:
+      environment:
+        type: string
+        required: true
+      aws_region:
+        type: string
+        required: false
+        default: "us-west-2"
+      artifact_path:
+        type: string
+        required: true
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ inputs.aws_region }}
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          role-to-assume: ${{ secrets.aws_role_to_assume }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_path }}
+          path: ${{ inputs.artifact_path }}
+      - run: aws s3 sync --delete --acl public-read dist s3://${{ secrets.aws_s3_bucket }}
+      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.aws_cloudfront_distribution_id }} --paths "/*" >/dev/null

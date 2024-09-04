@@ -25,7 +25,6 @@ on:
 
 jobs:
   Deploy:
-    name: Deploy Static Site (${{ inputs.environment }})
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     permissions:

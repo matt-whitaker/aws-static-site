@@ -1,6 +1,3 @@
-name: Build, Test, and Deploy (Prod)
-run-name: "Build, Test, and Deploy (Prod)"
-
 on:
   workflow_call:
     secrets:
@@ -28,6 +25,7 @@ on:
 
 jobs:
   Deploy:
+    name: Deploy Static Site (${{ inputs.environment }})
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     permissions:

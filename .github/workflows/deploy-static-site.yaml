@@ -39,7 +39,7 @@ jobs:
           role-to-assume: ${{ secrets.aws_role_to_assume }}
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact_path }}
+          name: ${{ replace(inputs.artifact_path, "/", "_") }}
           path: ${{ inputs.artifact_path }}
       - run: aws s3 sync --delete --acl public-read dist s3://${{ secrets.aws_s3_bucket }}
       - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.aws_cloudfront_distribution_id }} --paths "/*" >/dev/null

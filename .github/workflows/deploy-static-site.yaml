@@ -25,6 +25,10 @@ on:
       artifact_path:
         type: string
         required: true
+      invalidate_path:
+        type: string
+        required: false
+        default: "/*"
 
 jobs:
   Deploy:
@@ -45,4 +49,4 @@ jobs:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.artifact_path }}
       - run: aws s3 sync --delete --acl public-read ${{ inputs.artifact_path }} s3://${{ secrets.aws_s3_bucket }}
-      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.aws_cloudfront_distribution_id }} --paths "/*" >/dev/null
+      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.aws_cloudfront_distribution_id }} --paths "${{ inputs.invalidate_path }}" >/dev/null

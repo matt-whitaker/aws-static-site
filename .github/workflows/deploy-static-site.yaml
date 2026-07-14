@@ -48,5 +48,5 @@ jobs:
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.artifact_path }}
-      - run: aws s3 sync --delete --acl public-read ${{ inputs.artifact_path }} s3://${{ secrets.aws_s3_bucket }}
+      - run: aws s3 sync --delete ${{ inputs.artifact_path }} s3://${{ secrets.aws_s3_bucket }}
       - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.aws_cloudfront_distribution_id }} --paths "${{ inputs.invalidate_path }}" >/dev/null

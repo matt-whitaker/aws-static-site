@@ -1,0 +1,73 @@
+---
+Resources:
+  WAFv2WebACLCLOUDFRONT:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::WAFv2::WebACL"
+    DeletionPolicy: "Retain"
+    Properties:
+      Description: ""
+      DefaultAction:
+        Allow: {}
+      Scope: "CLOUDFRONT"
+      OnSourceDDoSProtectionConfig:
+        ALBLowReputationMode: "ACTIVE_UNDER_DDOS"
+      Rules:
+      - OverrideAction:
+          None: {}
+        RuleLabels: []
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          MetricName: "AWS-AWSManagedRulesAmazonIpReputationList"
+          CloudWatchMetricsEnabled: true
+        Priority: 0
+        Statement:
+          ManagedRuleGroupStatement:
+            ManagedRuleGroupConfigs: []
+            VendorName: "AWS"
+            RuleActionOverrides: []
+            ExcludedRules: []
+            Name: "AWSManagedRulesAmazonIpReputationList"
+        Name: "AWS-AWSManagedRulesAmazonIpReputationList"
+      - OverrideAction:
+          None: {}
+        RuleLabels: []
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          MetricName: "AWS-AWSManagedRulesCommonRuleSet"
+          CloudWatchMetricsEnabled: true
+        Priority: 1
+        Statement:
+          ManagedRuleGroupStatement:
+            ManagedRuleGroupConfigs: []
+            VendorName: "AWS"
+            RuleActionOverrides: []
+            ExcludedRules: []
+            Name: "AWSManagedRulesCommonRuleSet"
+        Name: "AWS-AWSManagedRulesCommonRuleSet"
+      - OverrideAction:
+          None: {}
+        RuleLabels: []
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          MetricName: "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+          CloudWatchMetricsEnabled: true
+        Priority: 2
+        Statement:
+          ManagedRuleGroupStatement:
+            ManagedRuleGroupConfigs: []
+            VendorName: "AWS"
+            RuleActionOverrides: []
+            ExcludedRules: []
+            Name: "AWSManagedRulesKnownBadInputsRuleSet"
+        Name: "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        MetricName: !Ref ACLName
+        CloudWatchMetricsEnabled: true
+      Name: !Ref ACLName
+
+Outputs:
+  WebACLArn:
+    Value: !GetAtt WebACL.Arn
+    Export:
+      Name: !Sub "${ACLName}-arn"

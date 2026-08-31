@@ -8,7 +8,7 @@ Resources:
     Type: "AWS::WAFv2::WebACL"
     DeletionPolicy: "Retain"
     Properties:
-      Description: ""
+      Description: "A static site WAF WebACL"
       DefaultAction:
         Allow: {}
       Scope: "CLOUDFRONT"

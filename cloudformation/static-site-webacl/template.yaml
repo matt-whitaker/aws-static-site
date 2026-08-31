@@ -71,6 +71,6 @@ Resources:
 
 Outputs:
   WebACLArn:
-    Value: !GetAtt WebACL.Arn
+    Value: !GetAtt WAFv2WebACLCLOUDFRONT.Arn
     Export:
       Name: !Sub "${ACLName}-arn"

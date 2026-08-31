@@ -1,4 +1,7 @@
 ---
+Parameters:
+  ACLName:
+    Type: String
 Resources:
   WAFv2WebACLCLOUDFRONT:
     UpdateReplacePolicy: "Retain"
